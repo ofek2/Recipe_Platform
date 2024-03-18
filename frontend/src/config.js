@@ -1,6 +1,6 @@
 // config.js
 const config = {
-    apiBaseUrl: '/api', 
+    apiBaseUrl: 'https://recipe-platform-one.vercel.app/api', 
   };
   
 export default config;
