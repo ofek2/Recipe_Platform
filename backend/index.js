@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.use(cors());
 
-setupProxy(app);
+// setupProxy(app);
 
 // Routes
 app.use('/api', recipeRoutes);
