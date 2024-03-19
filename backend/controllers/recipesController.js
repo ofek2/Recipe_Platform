@@ -46,6 +46,7 @@ const uploadImage = async (imageData, name) => {
       }
       const mimeType = matches[1];
       const base64Data = matches[2];
+      // eslint-disable-next-line no-undef
       const buffer = Buffer.from(base64Data, "base64");
       const filename = `${name}-${Date.now()}`;
       const storageRef = ref(storage, `recipeImages/${filename}`);

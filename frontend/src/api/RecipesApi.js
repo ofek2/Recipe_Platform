@@ -1,5 +1,5 @@
-import axios from 'axios';
 import config from '../config.js'; 
+import BaseApi from './BaseApi.js';
 const {apiBaseUrl } = config;
 
 async function fileToBase64(file) {
@@ -11,11 +11,9 @@ async function fileToBase64(file) {
   });
 }
 
-class RecipesApi {
-  constructor() {
-    this.api = axios.create({
-      baseURL: apiBaseUrl,
-    });
+class RecipesApi extends BaseApi {
+  constructor(resourceUrl = "/recipes") {
+    super(`${apiBaseUrl}${resourceUrl}`)
   }
   
 
@@ -37,9 +35,9 @@ class RecipesApi {
     });
 
     await Promise.all(asyncTasks);  
-    console.log(data);
+    
     try {
-      const response = await this.api.post('/recipes', data);
+      const response = await this.post('/', data);
       return response.data;
     } catch (error) {
       console.error('Error creating recipe:', error);
@@ -49,9 +47,7 @@ class RecipesApi {
 
   async getRecipes({page, pageSize, searchQuery}) {
     try {
-      const response = await this.api.get('/recipes', {
-        params: { page, pageSize, searchQuery },
-      });
+      const response = await this.get('/', { page, pageSize, searchQuery });
     //   const url = `/recipes?page=${page}&pageSize=${pageSize}&searchQuery=${searchQuery}`;
     // const response = await this.api.get(url);
 
@@ -64,7 +60,7 @@ class RecipesApi {
   
   async getRecipeById(id) {
     try {
-      const response = await this.api.get(`/recipes/${id}`);
+      const response = await this.get(`/${id}`);
       return response.data;
     } catch (error) {
       console.error(`Error getting recipe with ID ${id}:`, error);
@@ -89,7 +85,7 @@ class RecipesApi {
       });
 
       await Promise.all(asyncTasks);
-      const response = await this.api.put(`/recipes/${id}`, data);
+      const response = await this.put(`/${id}`, data);
       return response.data;
     } catch (error) {
       console.error(`Error updating recipe with ID ${id}:`, error);
@@ -99,7 +95,7 @@ class RecipesApi {
 
   async deleteRecipe(id) {
     try {
-      const response = await this.api.delete(`/recipes/${id}`);
+      const response = await this.delete(`/${id}`);
       return response.data;
     } catch (error) {
       console.error(`Error deleting recipe with ID ${id}:`, error);

@@ -1,13 +1,14 @@
 import express from 'express';
 const router = express.Router();
 import RecipeController from '../controllers/recipesController.js';
+import { verifyToken } from '../middlewares/verifyToken.js';
 
 // Routes for CRUD operations
-router.post('/recipes', RecipeController.createRecipe);
-router.get('/recipes', RecipeController.getRecipes);
-router.get('/recipes/:id', RecipeController.getRecipe);
-router.put('/recipes/:id', RecipeController.updateRecipe);
-router.delete('/recipes/:id', RecipeController.deleteRecipe);
+router.post('/', verifyToken, RecipeController.createRecipe);
+router.get('/', RecipeController.getRecipes);
+router.get('/:id', RecipeController.getRecipe);
+router.put('/:id', verifyToken, RecipeController.updateRecipe);
+router.delete('/:id', verifyToken, RecipeController.deleteRecipe);
 
 
 export default router;

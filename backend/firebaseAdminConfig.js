@@ -1,13 +1,12 @@
-const admin = require("firebase-admin");
+import admin from "firebase-admin";
 
-const serviceAccount = require("path/to/your/serviceAccountKey.json");
+import config from "./config.js";
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://your-project-id.firebaseio.com" // Replace with your database URL
+  credential: admin.credential.cert(config.firebaseAdminConfig)
 });
 
 const db = admin.firestore();
 const storage = admin.storage();
 
-export { db, storage };
+export { admin, db, storage };

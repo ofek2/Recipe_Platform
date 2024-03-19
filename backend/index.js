@@ -4,7 +4,6 @@ import bodyParser from 'body-parser';
 import recipeRoutes from './routes/recipesRoutes.js';
 import usersRoutes from './routes/usersRoutes.js';
 import config from './config.js';
-import setupProxy from './middlewares/setupProxy.js';
 
 
 // Unhandled exception handler
@@ -22,10 +21,8 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.use(cors());
 
-// setupProxy(app);
-
 // Routes
-app.use('/api', recipeRoutes);
+app.use('/api/recipes', recipeRoutes);
 app.use('/api/users', usersRoutes);
 
 

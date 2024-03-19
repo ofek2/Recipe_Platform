@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import LoginForm from '../components/LoginForm';
-import RegisterForm from '../components/RegisterForm';
+import LoginForm from '../components/LoginForm.js';
+import RegisterForm from '../components/RegisterForm.js';
 
 const AuthPage = () => {
   const [isRegisterMode, setRegisterMode] = useState(false);
@@ -10,12 +10,8 @@ const AuthPage = () => {
   };
 
   return  (
-    <div className='text-center bg-green-400'>
-      <label className='text-3xl font-bold text-white'>
-        Recipe Sharing and Meal Planner
-      </label>
-      <div className='flex justify-center'>
-        <div className='w-1/2 z-10'>
+      <div className='text-center justify-center flex bg-green-400'>
+        <div className=''>
           {isRegisterMode ? (
             <RegisterForm handleToggleMode={handleToggleMode} />
           ) : (
@@ -24,7 +20,7 @@ const AuthPage = () => {
         </div>
        
       </div>
-    </div>
+
   
   );
 };

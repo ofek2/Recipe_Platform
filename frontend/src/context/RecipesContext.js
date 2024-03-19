@@ -6,7 +6,7 @@ import React, {
   useMemo,
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import RecipesApi from "../api/RecipesApi";
+import RecipesApi from "../api/RecipesApi.js";
 
 const RecipesContext = createContext();
 

@@ -1,38 +1,44 @@
-import axios from 'axios';
+import { auth, signIn } from '../fireBase.js';
 import config from '../config.js'; 
+import BaseApi from './BaseApi.js';
+import { signOut } from '@firebase/auth';
+
 const {apiBaseUrl } = config;
 
-class UsersApi {
-  constructor() {
-    this.api = axios.create({
-      baseURL: apiBaseUrl,
-    });
+class UsersApi extends BaseApi{
+  constructor(resourceUrl = "/users") {
+    super(`${apiBaseUrl}${resourceUrl}`)
   }
+  
+  
 
   async registerUser(formData) {
     try {
-      const response = await this.api.post('/users/register', formData);
+      
+      const response = await this.api.post('/register', formData);
       return response.data;
     } catch (error) {
       console.error('Error registering user:', error);
       throw error;
     }
   }
-
-  async loginUser(formData) {
+  async loginUser(email, password) {
     try {
-      const response = await this.api.post('/users/login', formData);
-      return response.data;
+      
+      const response = await signIn(email, password);
+      const idToken = await response.user.getIdToken();
+      localStorage.setItem('token', idToken); // Store the token in local storage
+      return response.user;
     } catch (error) {
       console.error('Error logging in user:', error);
       throw error;
     }
-  }
+  };
+  
 
   async logoutUser() {
     try {
-      const response = await this.api.post('/users/logout');
-      return response.data;
+      await signOut(auth);
     } catch (error) {
       console.error('Error logging out user:', error);
       throw error;
@@ -41,7 +47,7 @@ class UsersApi {
 
   async getCurrentUser() {
     try {
-      const response = await this.api.get('/users/current-user');
+      const response = await this.get('/current-user');
       return response.data;
     } catch (error) {
       console.error('Error getting current user:', error);
@@ -51,5 +57,5 @@ class UsersApi {
 
 
 }
-
-export default new UsersApi();
+const UserApi = new UsersApi();
+export default UserApi;

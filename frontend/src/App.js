@@ -8,7 +8,7 @@ import AddRecipePage  from './pages/AddRecipe';
 import AuthPage from './pages/Auth';
 
 import Footer from './components/Footer';
-import { useAuth } from './context/AuthContext';
+import { useAuth } from './context/AuthContext.js';
 import LoadingSpinner from './components/LoadingSpinner';
 import EditRecipePage from './pages/EditRecipe';
 
@@ -22,7 +22,7 @@ function App() {
 
   return (
     <>
-      <Navbar/>
+      {/* <Navbar/> */}
       
       <Routes>
         {user ? (

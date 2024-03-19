@@ -1,6 +1,8 @@
 // AuthContext.js
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import UsersApi from '../api/UsersApi';
+import UsersApi from '../api/UsersApi.js';
+import { signInWithToken } from '../fireBase.js';
+
 
 const AuthContext = createContext();
 
@@ -20,12 +22,33 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
-    fetchCurrentUser();
+    // Check if user token exists in local storage
+    const token = localStorage.getItem('token');
+    if (token) {
+      signInWithToken(token)
+        .then((userCredential) => {
+          // User logged in successfully
+          const user = userCredential.user;
+          setUser(user);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error('Error logging in with token:', error);
+          setLoading(false);
+        });
+    } else {
+      // No user token found in local storage
+      fetchCurrentUser().finally(()=> {
+        setLoading(false);
+      })
+
+    }
+
   }, []);
 
   const login = async (formData) => {
     try {
-      const loggedInUser = await UsersApi.loginUser(formData);
+      const loggedInUser = await UsersApi.loginUser(formData.username, formData.password);
       setUser(loggedInUser);
     } catch (error) {
       console.error('Error logging in:', error);
@@ -37,6 +60,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await UsersApi.logoutUser();
       setUser(null);
+      localStorage.removeItem('token');
     } catch (error) {
       console.error('Error logging out:', error);
       throw error;
