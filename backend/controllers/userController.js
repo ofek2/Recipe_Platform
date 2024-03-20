@@ -1,7 +1,7 @@
 
 import User from '../models/User.js';
 import FirestoreService from '../services/FirestoreService.js';
-import { admin } from "../firebaseAdminConfig.js";
+import { admin, adminAuth } from "../firebaseAdminConfig.js";
 import { toEmailAddress } from '../utils.js';
 
 class UserController {
@@ -55,18 +55,23 @@ class UserController {
     try {
       // Check if the provided username is in email format
       const email = toEmailAddress(username);
-
       // Authenticate user using Firebase Admin Authentication
-      const userCredential = await admin.auth().signInWithEmailAndPassword(email, password);
-      const user = userCredential.user;
+      const userRecord = await admin.auth().getUserByEmail(email);
+
+      // Verify the user's password
+      // await adminAuth.(password, userRecord);
+
+      const user = userRecord.user;
 
       if (user) {
         // Retrieve additional user details from Firestore
         const userDoc = await this.firestoreService.getSingleDocByField('email', user.email);
 
         const userModel = new User(user.uid, user.email, userDoc?.displayName, userDoc?.isAdmin );
+        // Create a custom token for the user
+        const customToken = await admin.auth().createCustomToken(user.uid);
 
-        res.status(200).json(userModel);
+        res.status(200).json({user: userModel, token: customToken});
       } else {
         console.error(`Invalid username or password for username: ${username}`);
         res.status(401).send('Invalid username or password');

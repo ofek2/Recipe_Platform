@@ -25,10 +25,9 @@ class UsersApi extends BaseApi{
   async loginUser(email, password) {
     try {
       
-      const response = await signIn(email, password);
-      const idToken = await response.user.getIdToken();
-      localStorage.setItem('token', idToken); // Store the token in local storage
-      return response.user;
+      // const response = await signIn(email, password);
+      const response = await this.post("/login", {username: email, password});
+      return response;
     } catch (error) {
       console.error('Error logging in user:', error);
       throw error;

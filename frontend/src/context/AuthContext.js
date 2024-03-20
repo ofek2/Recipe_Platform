@@ -48,7 +48,10 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (formData) => {
     try {
-      const loggedInUser = await UsersApi.loginUser(formData.username, formData.password);
+      
+      const {user: loggedInUser, token: idToken} = await UsersApi.loginUser(formData.username, formData.password);
+      localStorage.setItem('token', idToken); // Store the token in local storage
+
       setUser(loggedInUser);
     } catch (error) {
       console.error('Error logging in:', error);
